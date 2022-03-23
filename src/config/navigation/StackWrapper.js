@@ -13,6 +13,11 @@ const App = () => (
         options={{ title: 'MyOpenWeatherMap' }}
         component={screens.MapScreen}
       />
+      <DashboardStack.Screen
+        name="CitiesScreen"
+        options={{ title: 'Cities List' }}
+        component={screens.CitiesScreen}
+      />
     </DashboardStack.Navigator>
   </NavigationContainer>
 );

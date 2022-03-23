@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text } from 'react-native';
-
-import HttpService from '../services/HttpService';
+import React from 'react';
+import { StyleSheet, Button } from 'react-native';
+import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({
   highlight: {
@@ -9,17 +8,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const App = () => {
-  const getData = async () => {
-    const response = await HttpService.get('weather', { key: 'd6589540' }).then(resp => resp);
-    console.log('Weather data: ', response.data);
-  };
+const MapScreen = ({ navigation }) => (
+  <Button
+    style={styles.highlight}
+    onPress={() => navigation.navigate('CitiesScreen')}
+    title="Search"
+    color="#841584"
+  />
+);
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  return <Text style={styles.highlight}>App.js</Text>;
+MapScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
-export default App;
+export default MapScreen;
