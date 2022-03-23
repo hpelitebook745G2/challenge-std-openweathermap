@@ -3,7 +3,7 @@ import axios from 'axios';
 class HttpService {
   constructor() {
     const http = axios.create({
-      baseURL: 'https://my.api.mockaroo.com/',
+      baseURL: 'https://api.openweathermap.org/',
     });
 
     // setup interceptor for http request
@@ -21,10 +21,10 @@ class HttpService {
   }
 
   // Request interceptor to add auth bearer token to request header
-  static handleRequestInterceptor = async request => request;
+  handleRequestInterceptor = async request => request;
 
   // Response interceptor to manage token refresh
-  static handleResponseInterceptor = error => Promise.reject(error.response);
+  handleResponseInterceptor = error => Promise.reject(error.response);
 
   // Perform a get http call
   get = (url, payload, conf = {}) => {
@@ -40,9 +40,9 @@ class HttpService {
       .catch(error => this.handleFailResponse(error));
   };
 
-  static handleSuccessResponse = response => response;
+  handleSuccessResponse = response => response.data;
 
-  static handleFailResponse = error => error;
+  handleFailResponse = error => Promise.reject(error);
 }
 
 export default new HttpService();
