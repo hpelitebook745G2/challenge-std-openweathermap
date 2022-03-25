@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import City from '../components/City';
 import HttpService from '../services/HttpService';
-import apis from '../constants/apis';
+import { apis, colors } from '../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +33,7 @@ const CitiesScreen = ({ navigation, route }) => {
       const response = await HttpService.get(apis.current, payload).then(resp => resp);
       setCitiesList(response.list);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log('Error: ', e);
     }
   };
@@ -46,10 +47,10 @@ const CitiesScreen = ({ navigation, route }) => {
       {citiesList.length > 0 ? (
         <FlatList
           data={citiesList}
-          renderItem={({ item, index }) => (
+          renderItem={({ item }) => (
             <City item={item} navigation={navigation} coords={{ lat, lon }} />
           )}
-          style={{ backgroundColor: '#E7E7E5' }}
+          style={{ backgroundColor: colors.backgroundGrey }}
         />
       ) : (
         <Text style={styles.txtNoResults}>No results found, please search again!</Text>

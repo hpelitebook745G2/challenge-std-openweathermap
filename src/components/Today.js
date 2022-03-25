@@ -3,14 +3,15 @@ import { StyleSheet, Text, Image, View } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { getWeatherIcon, convertToCelsius } from '../utils';
+import colors from '../constants/colors';
 
 const styles = StyleSheet.create({
   topContainer: {
     margin: 20,
     padding: 20,
-    borderLeftColor: '#E76F51',
+    borderLeftColor: colors.darkOrange,
     borderLeftWidth: 5,
-    backgroundColor: '#F5B6A7',
+    backgroundColor: colors.lightOrange,
   },
   currentContainer: {
     backgroundColor: 'white',

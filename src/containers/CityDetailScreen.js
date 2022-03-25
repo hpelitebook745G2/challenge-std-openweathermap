@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import HttpService from '../services/HttpService';
-import apis from '../constants/apis';
+import { apis, colors } from '../constants';
 import { Today, Hourly, Daily } from '../components';
 
 const CityDetailScreen = ({ route }) => {
@@ -33,6 +33,7 @@ const CityDetailScreen = ({ route }) => {
       const response = await HttpService.get(apis.onecall, payload).then(resp => resp);
       setHourlyData(response);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log('Error: ', e);
     }
   };
@@ -52,7 +53,7 @@ const CityDetailScreen = ({ route }) => {
   });
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#E7E7E5' }}>
+    <View style={{ flex: 1, backgroundColor: colors.backgroundGrey }}>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -62,8 +63,8 @@ const CityDetailScreen = ({ route }) => {
           <TabBar
             {...props}
             renderLabel={({ route }) => <Text style={{ color: 'black' }}>{route.title}</Text>}
-            indicatorStyle={{ backgroundColor: '#ec853e' }}
-            style={{ backgroundColor: '#E7E7E5' }}
+            indicatorStyle={{ backgroundColor: colors.primaryOrange }}
+            style={{ backgroundColor: colors.backgroundGrey }}
           />
         )}
       />

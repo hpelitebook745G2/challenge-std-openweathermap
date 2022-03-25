@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
 import { getWeatherIcon, convertToCelsius } from '../utils';
+import colors from '../constants/colors';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 10,
-    backgroundColor: '#E7E7E5',
+    backgroundColor: colors.backgroundGrey,
   },
   itemContainer: {
     flex: 1,
@@ -63,37 +64,34 @@ const styles = StyleSheet.create({
   },
 });
 
-const Daily = ({ data }) => {
-  console.log('data: ', data);
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={data?.daily}
-        renderItem={({ item }) => (
-          <View style={styles.itemContainer}>
-            <View style={styles.firstContainer}>
-              <Text style={styles.txtDay}>{dayjs.unix(item.dt).format('ddd').toUpperCase()}</Text>
-              <Text style={styles.txtDate}>{dayjs.unix(item.dt).format('DD/MM')}</Text>
-            </View>
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.iconWeather}
-                source={getWeatherIcon(item?.weather[0]?.description)}
-              />
-              <Text style={styles.txtTempMax}>{convertToCelsius(item?.temp?.max)}</Text>
-              <Text style={styles.txtTempMin}>/{convertToCelsius(item?.temp?.min)}</Text>
-            </View>
-            <View style={{ flex: 0.2, flexDirection: 'row' }}>
-              <Image style={styles.iconDroplet} source={require('../assets/icons/droplet.png')} />
-              <Text style={styles.txtPrecipitation}>{item.pop}%</Text>
-            </View>
+const Daily = ({ data }) => (
+  <View style={styles.container}>
+    <FlatList
+      data={data?.daily}
+      renderItem={({ item }) => (
+        <View style={styles.itemContainer}>
+          <View style={styles.firstContainer}>
+            <Text style={styles.txtDay}>{dayjs.unix(item.dt).format('ddd').toUpperCase()}</Text>
+            <Text style={styles.txtDate}>{dayjs.unix(item.dt).format('DD/MM')}</Text>
           </View>
-        )}
-        style={{}}
-      />
-    </View>
-  );
-};
+          <View style={styles.iconContainer}>
+            <Image
+              style={styles.iconWeather}
+              source={getWeatherIcon(item?.weather[0]?.description)}
+            />
+            <Text style={styles.txtTempMax}>{convertToCelsius(item?.temp?.max)}</Text>
+            <Text style={styles.txtTempMin}>/{convertToCelsius(item?.temp?.min)}</Text>
+          </View>
+          <View style={{ flex: 0.2, flexDirection: 'row' }}>
+            <Image style={styles.iconDroplet} source={require('../assets/icons/droplet.png')} />
+            <Text style={styles.txtPrecipitation}>{item.pop}%</Text>
+          </View>
+        </View>
+      )}
+      style={{}}
+    />
+  </View>
+);
 
 Daily.propTypes = {
   data: PropTypes.oneOfType([PropTypes.object]).isRequired,

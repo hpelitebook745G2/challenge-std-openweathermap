@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 
 import { getWeatherIcon, convertToCelsius } from '../utils';
+import colors from '../constants/colors';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginBottom: 10,
-    backgroundColor: '#E7E7E5',
+    backgroundColor: colors.backgroundGrey,
   },
   itemContainer: {
     flexDirection: 'row',
