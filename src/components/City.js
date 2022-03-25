@@ -38,12 +38,15 @@ const styles = StyleSheet.create({
 const City = ({ item, navigation, coords }) => (
   <TouchableOpacity
     style={[styles.cityContainer, { backgroundColor: 'white' }]}
-    onPress={() =>
-      navigation.navigate('CityDetailScreen', {
-        city: item,
-        coords,
-      })
-    }>
+    onPress={
+      () =>
+        navigation.navigate('CityDetailScreen', {
+          city: item,
+          coords,
+        })
+      // eslint-disable-next-line prettier/prettier
+    }
+  >
     <Text style={styles.itemCity}>{item.name}</Text>
     <View style={styles.rightContainer}>
       <Image style={styles.iconWeather} source={getWeatherIcon(item?.weather[0]?.description)} />
