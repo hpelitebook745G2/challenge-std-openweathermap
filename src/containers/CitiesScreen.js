@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, FlatList, View } from 'react-native';
+import { StyleSheet, FlatList, View, Text } from 'react-native';
+import PropTypes from 'prop-types';
 
+import City from '../components/City';
 import HttpService from '../services/HttpService';
+import apis from '../constants/apis';
 
 const styles = StyleSheet.create({
-  itemCity: {
+  container: {
+    flex: 1,
+  },
+  txtNoResults: {
+    textAlignVertical: 'center',
     textAlign: 'center',
-    alignItems: 'center',
+    flex: 1,
+    fontSize: 20,
   },
 });
 
-const CitiesScreen = () => {
+const CitiesScreen = ({ navigation, route }) => {
+  const { lat, lon } = route.params;
   const [citiesList, setCitiesList] = useState([]);
   const getData = async () => {
     const payload = {
-      lat: 1.29027,
-      lon: 103.851959,
+      lat,
+      lon,
       cnt: 15,
-      APPID: '22afed12dc68443a47372453af301fb5',
+      APPID: apis.apiKey,
     };
 
     try {
-      const response = await HttpService.get('data/2.5/find', payload).then(resp => resp);
+      const response = await HttpService.get(apis.current, payload).then(resp => resp);
       setCitiesList(response.list);
     } catch (e) {
       console.log('Error: ', e);
@@ -31,19 +40,29 @@ const CitiesScreen = () => {
   useEffect(() => {
     getData();
   }, []);
-  console.log('citiesList: ', citiesList);
+
   return (
-    <View style={{ flex: 1 }}>
-      <FlatList
-        data={citiesList}
-        renderItem={({ item }) => {
-          console.log('item: ', item);
-          return <Text style={styles.itemCity}>{item.name}</Text>;
-        }}
-        style={{}}
-      />
+    <View style={styles.container}>
+      {citiesList.length > 0 ? (
+        <FlatList
+          data={citiesList}
+          renderItem={({ item, index }) => (
+            <City item={item} navigation={navigation} coords={{ lat, lon }} />
+          )}
+          style={{ backgroundColor: '#E7E7E5' }}
+        />
+      ) : (
+        <Text style={styles.txtNoResults}>No results found, please search again!</Text>
+      )}
     </View>
   );
+};
+
+CitiesScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
+  route: PropTypes.oneOfType([PropTypes.object]).isRequired,
 };
 
 export default CitiesScreen;
