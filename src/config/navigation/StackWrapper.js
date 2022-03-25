@@ -10,13 +10,18 @@ const App = () => (
     <DashboardStack.Navigator>
       <DashboardStack.Screen
         name="MapScreen"
-        options={{ title: 'MyOpenWeatherMap' }}
         component={screens.MapScreen}
+        options={{ headerShown: false }}
       />
       <DashboardStack.Screen
         name="CitiesScreen"
         options={{ title: 'Cities List' }}
         component={screens.CitiesScreen}
+      />
+      <DashboardStack.Screen
+        name="CityDetailScreen"
+        options={{ title: 'City Weather Condition' }}
+        component={screens.CityDetailScreen}
       />
     </DashboardStack.Navigator>
   </NavigationContainer>
