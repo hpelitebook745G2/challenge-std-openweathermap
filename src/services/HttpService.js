@@ -3,7 +3,7 @@ import axios from 'axios';
 class HttpService {
   constructor() {
     const http = axios.create({
-      baseURL: 'https://api.openweathermap.org/',
+      baseURL: 'https://api.openweathermap.org/data/2.5',
     });
 
     // setup interceptor for http request
