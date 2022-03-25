@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Text,
+  Platform,
+  PermissionsAndroid,
+} from 'react-native';
 import PropTypes from 'prop-types';
-
+import Geolocation from 'react-native-geolocation-service';
 import MapView, { Marker } from 'react-native-maps';
+
+import { colors } from '../constants';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,7 +27,6 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   btnSearchContainer: {
-    backgroundColor: '#ec853e',
     borderRadius: 50,
     paddingVertical: 10,
     position: 'absolute',
@@ -29,35 +37,77 @@ const styles = StyleSheet.create({
 });
 
 const MapScreen = ({ navigation }) => {
-  const [region, setRegion] = useState({
-    latitude: 51.5079145,
-    longitude: -0.0899163,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
+  const [marker, setMarker] = useState({
+    latitude: 1.3333333333333333,
+    longitude: 103.86596046278682,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
   });
-  const [marker, setMarker] = useState(null);
+
+  const getCurrentPosition = async () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setMarker(position.coords);
+      },
+      error => {
+        // eslint-disable-next-line no-console
+        console.log('Geolocation error: ', error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
+    );
+  };
+
+  const requestPermissions = async () => {
+    if (Platform.OS === 'ios') {
+      const auth = await Geolocation.requestAuthorization('whenInUse');
+      if (auth === 'granted') {
+        // do something if granted...
+        getCurrentPosition();
+      }
+    }
+
+    if (Platform.OS === 'android') {
+      const auth = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      if (auth === PermissionsAndroid.RESULTS.GRANTED) {
+        // do something if granted...
+        getCurrentPosition();
+      }
+    }
+  };
+
+  useEffect(() => {
+    requestPermissions();
+    getCurrentPosition();
+  }, []);
 
   return (
     <View style={styles.container}>
       <MapView
         style={styles.map}
-        // specify our coordinates.
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        onRegionChangeComplete={region => setRegion(region)}
-        onPress={e => setMarker(e.nativeEvent.coordinate)}>
+        initialRegion={marker}
+        // eslint-disable-next-line prettier/prettier
+        onPress={e => {
+          setMarker({
+            ...e.nativeEvent.coordinate,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          });
+        }}>
         {marker && <Marker coordinate={marker} />}
       </MapView>
       <TouchableOpacity
-        style={styles.btnSearchContainer}
+        style={[
+          styles.btnSearchContainer,
+          { backgroundColor: marker === null ? colors.disabledGrey : colors.primaryOrange },
+        ]}
         disabled={marker === null}
-        onPress={() =>
-          navigation.navigate('CitiesScreen', { lat: marker.latitude, lon: marker.longitude })
-        }>
+        onPress={
+          () => navigation.navigate('CitiesScreen', { lat: marker.latitude, lon: marker.longitude })
+          // eslint-disable-next-line prettier/prettier
+        }
+      >
         <Text style={styles.btnSearch}>Search</Text>
       </TouchableOpacity>
     </View>
