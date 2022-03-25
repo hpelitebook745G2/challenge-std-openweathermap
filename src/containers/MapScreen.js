@@ -94,7 +94,9 @@ const MapScreen = ({ navigation }) => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           });
-        }}>
+          // eslint-disable-next-line prettier/prettier
+        }}
+      >
         {marker && <Marker coordinate={marker} />}
       </MapView>
       <TouchableOpacity
